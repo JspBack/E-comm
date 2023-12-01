@@ -13,3 +13,5 @@ export { default as Stacked } from "./Charts/Stacked";
 export { default as Doughnut } from "./Charts/Doughnut";
 export { default as ChartsHeader } from "./ChartsHeader";
 export { default as Header } from "./Header";
+export { default as Login } from "./Login/Login";
+export { default as Register } from "./Login/Register";
