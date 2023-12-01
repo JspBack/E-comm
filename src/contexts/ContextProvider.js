@@ -15,6 +15,7 @@ export const ContextProvider = ({ children }) => {
   const [currentMode, setCurrentMode] = useState("Light");
   const [themeSettings, setThemeSettings] = useState(false);
   const [activeMenu, setActiveMenu] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isClicked, setIsClicked] = useState(initialState);
 
   const setMode = (mode) => {
@@ -29,6 +30,13 @@ export const ContextProvider = ({ children }) => {
 
   const handleClick = (clicked) =>
     setIsClicked({ ...initialState, [clicked]: true });
+
+  const handleClose = (clicked) => {
+    setIsClicked({ ...initialState, [clicked]: false });
+  };
+  const setAuthentication = (status) => {
+    setIsAuthenticated(status);
+  };
 
   return (
     <StateContext.Provider
@@ -49,6 +57,9 @@ export const ContextProvider = ({ children }) => {
         setColor,
         themeSettings,
         setThemeSettings,
+        handleClose,
+        isAuthenticated,
+        setAuthentication,
       }}
     >
       {children}

@@ -6,7 +6,7 @@ import { chatData } from "../data/dummy";
 import { useStateContext } from "../contexts/ContextProvider";
 
 const Notification = () => {
-  const { currentColor } = useStateContext();
+  const { currentColor, handleClose } = useStateContext();
 
   return (
     <div className="nav-item absolute right-5 md:right-40 top-16 bg-white dark:bg-[#42464D] p-8 rounded-lg w-96">
@@ -19,11 +19,11 @@ const Notification = () => {
             type="button"
             className="text-white text-xs rounded p-1 px-2 bg-orange-theme "
           >
-            {" "}
             5 New
           </button>
         </div>
         <Button
+          func={() => handleClose()}
           icon={<MdOutlineCancel />}
           color="rgb(153, 171, 180)"
           bgHoverColor="light-gray"

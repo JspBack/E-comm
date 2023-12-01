@@ -7,7 +7,7 @@ import { cartData } from "../data/dummy";
 import { Button } from ".";
 
 const Cart = () => {
-  const { currentColor } = useStateContext();
+  const { currentColor, handleClose } = useStateContext();
 
   return (
     <div className="bg-half-transparent w-full fixed nav-item top-0 right-0 ">
@@ -15,6 +15,7 @@ const Cart = () => {
         <div className="flex justify-between items-center">
           <p className="font-semibold text-lg">Shopping Cart</p>
           <Button
+            func={() => handleClose()}
             icon={<MdOutlineCancel />}
             color="rgb(153, 171, 180)"
             bgHoverColor="light-gray"

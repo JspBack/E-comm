@@ -32,6 +32,7 @@ const App = () => {
     setCurrentMode,
     currentMode,
     activeMenu,
+    setActiveMenu,
     currentColor,
     themeSettings,
     setThemeSettings,
@@ -54,7 +55,10 @@ const App = () => {
             <TooltipComponent content="Settings" position="Top">
               <button
                 type="button"
-                onClick={() => setThemeSettings(true)}
+                onClick={() => {
+                  setThemeSettings(true);
+                  setActiveMenu(false);
+                }}
                 style={{ background: currentColor, borderRadius: "50%" }}
                 className="text-3xl text-white p-3 hover:drop-shadow-xl hover:bg-light-gray"
               >
