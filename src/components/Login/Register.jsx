@@ -6,13 +6,13 @@ const Register = () => {
   const { handleClick, isClicked } = useStateContext();
   return (
     <div>
-      {isClicked.register && <Process />}
+      {isClicked.register && (
+        <Process PswdType={"current-password"} text={"Register"} isReg={true} />
+      )}
       <button
         onClick={() => handleClick("register")}
-        className="sm:w-96 w-48 border-white border-2 text-lg p-3 hover:drop-shadow-xl"
+        className="sm:w-96 w-48 border-white border-2 text-lg p-3 hover:drop-shadow-xl text-white bg-transparent hover:text-gray-800 transition-all hover:bg-white"
         style={{
-          backgroundColor: "transparent",
-          color: "white",
           borderRadius: "10px",
         }}
       >
