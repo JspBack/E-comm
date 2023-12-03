@@ -6,6 +6,7 @@ import {
   createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../../../firebase";
+import Loader from "./Loader";
 
 const Process = ({ PswdType, text, isReg }) => {
   const { handleClose } = useStateContext();
@@ -14,58 +15,79 @@ const Process = ({ PswdType, text, isReg }) => {
   const [password, setPassword] = useState("");
   const [confPassword, setConfPassword] = useState("");
   const [alerted, setAlerted] = useState(false);
+  const [loader, setLoader] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleLogin = (e) => {
+    setLoader(true);
     e.preventDefault();
     setAlerted(false);
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        // const user = userCredential.user;
+        const user = userCredential.user;
+        localStorage.setItem(
+          "user",
+          JSON.stringify({
+            name: user.displayName,
+            access_token: user.accessToken,
+          })
+        );
         alert("Successfully logged in!");
         setEmail("");
         setPassword("");
         setConfPassword("");
+        window.location.reload();
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         alert(`${errorMessage} (${errorCode})`);
+        setLoader(false);
         return;
       });
   };
 
-  const handleCheck = (e) => {
+  const handleRegister = (e) => {
+    setLoader(true);
     e.preventDefault();
     if (password !== confPassword) {
       alert("Passwords do not match!");
       setAlerted(true);
+      setLoader(false);
       return;
     } else {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const user = userCredential.user;
           alert("Account created successfully");
-          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              name: user.displayName,
+              access_token: user.accessToken,
+            })
+          );
           setEmail("");
           setPassword("");
           setConfPassword("");
           setAlerted(false);
+          window.location.reload();
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           alert(`${errorMessage} (${errorCode})`);
+          setLoader(false);
           return;
         });
     }
   };
   return (
-    <div className=" md:right-[52%] md:top-[33%] flex flex-col justify-center items-center absolute bg-gray-300 p-3 lg:top-[35%] lg:right-[30%] right-[35%] sm:right-[43%] top-[40%] sm:top-[35%] rounded-md ">
+    <div className="z-10 md:right-[52%] md:top-[33%] flex flex-col justify-center items-center absolute bg-gray-300 p-3 lg:top-[35%] lg:right-[30%] right-[35%] sm:right-[43%] top-[40%] sm:top-[35%] rounded-md ">
       <div className="flex flex-row items-start">
         {isReg ? (
           <form
             className=" w-max h-max flex flex-col justify-center items-center"
-            onSubmit={handleCheck}
+            onSubmit={handleRegister}
           >
             <label
               className=" text-white flex text-sm sm:text-2xl font-semibold "
@@ -74,6 +96,7 @@ const Process = ({ PswdType, text, isReg }) => {
               Email:
             </label>
             <input
+              autoComplete="email"
               className=" tracking-tighter rounded text-black sm:w-96 w-48 text-lg p-3 hover:drop-shadow-xl"
               type="email"
               id="email"
@@ -120,20 +143,23 @@ const Process = ({ PswdType, text, isReg }) => {
             />
 
             <button
-              className=" sm:w-96 w-48 text-lg p-3 hover:drop-shadow-xl mt-3 text-white transition-all hover:brightness-150"
+              disabled={loader ? true : false}
+              className={`flex justify-center items-center sm:w-96 w-48 text-lg ${
+                loader ? "p-1 sm:p-0" : "p-3"
+              } hover:drop-shadow-xl mt-3 text-white transition-all hover:brightness-150 disabled:opacity-50 disabled:cursor-not-allowed`}
               type="submit"
               style={{
                 backgroundColor: currentColor ? currentColor : "blue",
                 borderRadius: "10px",
               }}
             >
-              {text}
+              {loader ? <Loader /> : text}
             </button>
           </form>
         ) : (
           <form
             className=" w-max h-max flex flex-col justify-center items-center"
-            onSubmit={handleSubmit}
+            onSubmit={handleLogin}
           >
             <label
               className=" text-white flex text-sm sm:text-2xl font-semibold "
@@ -142,6 +168,7 @@ const Process = ({ PswdType, text, isReg }) => {
               Email:
             </label>
             <input
+              autoComplete="email"
               className=" tracking-tighter rounded text-black sm:w-96 w-48 text-lg p-3 hover:drop-shadow-xl"
               type="email"
               id="email"
@@ -173,14 +200,17 @@ const Process = ({ PswdType, text, isReg }) => {
             />
 
             <button
-              className=" sm:w-96 w-48 text-lg p-3 hover:drop-shadow-xl mt-3 text-white transition-all hover:brightness-150"
+              disabled={loader ? true : false}
+              className={`flex justify-center items-center sm:w-96 w-48 text-lg ${
+                loader ? "p-1 sm:p-0" : "p-3"
+              } hover:drop-shadow-xl mt-3 text-white transition-all hover:brightness-150 disabled:opacity-50 disabled:cursor-not-allowed`}
               type="submit"
               style={{
                 backgroundColor: currentColor ? currentColor : "blue",
                 borderRadius: "10px",
               }}
             >
-              {text}
+              {loader ? <Loader /> : text}
             </button>
           </form>
         )}
