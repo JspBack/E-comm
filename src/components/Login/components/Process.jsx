@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useStateContext } from "../../../contexts/ContextProvider";
 
 const Process = ({ PswdType, text, isReg }) => {
   const currentColor = localStorage.getItem("colorMode");
@@ -84,7 +83,7 @@ const Process = ({ PswdType, text, isReg }) => {
           ""
         )}
         <button
-          className=" sm:w-96 w-48 text-lg p-3 hover:drop-shadow-xl mt-3 text-white hover:text-gray-800 transition-all hover:brightness-150"
+          className=" sm:w-96 w-48 text-lg p-3 hover:drop-shadow-xl mt-3 text-white transition-all hover:brightness-150"
           type="submit"
           style={{
             backgroundColor: currentColor ? currentColor : "blue",

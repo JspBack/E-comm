@@ -9,7 +9,7 @@ const Login = () => {
     <div>
       <button
         onClick={() => handleClick("login")}
-        className="sm:w-96 w-48 text-lg p-3 hover:drop-shadow-xl text-white hover:text-gray-800 transition-all hover:brightness-150"
+        className="sm:w-96 w-48 text-lg p-3 hover:drop-shadow-xl text-white transition-all hover:brightness-150"
         style={{
           backgroundColor: currentColor ? currentColor : "blue",
           borderRadius: "10px",
