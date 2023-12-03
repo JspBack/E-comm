@@ -1,7 +1,6 @@
 import React from "react";
 import {
   GridComponent,
-  ColumnComponent,
   ColumnDirective,
   Page,
   Search,
