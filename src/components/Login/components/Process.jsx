@@ -11,7 +11,7 @@ import Loader from "./Loader";
 
 const Process = ({ PswdType, text, isReg }) => {
   const navigate = useNavigate();
-  const { handleClose } = useStateContext();
+  const { handleClose, setUser } = useStateContext();
   const currentColor = localStorage.getItem("colorMode");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +27,7 @@ const Process = ({ PswdType, text, isReg }) => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // const user = userCredential.user;
-        return auth.currentUser.getIdToken(); // Call getIdToken() function
+        return auth.currentUser.getIdToken();
       })
       .then((accessToken) => {
         if (localStorage.getItem("user") !== null) {
@@ -45,8 +45,8 @@ const Process = ({ PswdType, text, isReg }) => {
             setEmail("");
             setPassword("");
             setConfPassword("");
+            setUser(true);
             handleClose("login");
-            // window.location.reload();
             return;
           }
         }
@@ -62,6 +62,7 @@ const Process = ({ PswdType, text, isReg }) => {
         setEmail("");
         setPassword("");
         setConfPassword("");
+        setUser(true);
         handleClose("login");
         window.location.reload();
       })

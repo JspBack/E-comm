@@ -43,47 +43,39 @@ const App = () => {
   } = useStateContext();
 
   useEffect(() => {
-    const currentThemeColor = localStorage.getItem("colorMode");
-    const currentThemeMode = localStorage.getItem("themeMode");
     const fetchData = async () => {
-      const isAuthenticated = await checkAuthentication();
+      try {
+        const user = auth.currentUser;
 
-      if (isAuthenticated === true) {
-        setUser(true);
-      } else {
+        if (user) {
+          const tokenResult = await user.getIdTokenResult();
+          const storedUser = JSON.parse(localStorage.getItem("user"));
+
+          if (storedUser && storedUser.access_token === tokenResult.token) {
+            setUser(true);
+          } else {
+            setUser(false);
+          }
+        } else {
+          setUser(false);
+        }
+      } catch (error) {
+        console.error("Error checking authentication:", error);
         setUser(false);
       }
     };
+
+    fetchData();
+  }, [setUser]);
+
+  useEffect(() => {
+    const currentThemeColor = localStorage.getItem("colorMode");
+    const currentThemeMode = localStorage.getItem("themeMode");
     if (currentThemeColor && currentThemeMode) {
       setCurrentColor(currentThemeColor);
       setCurrentMode(currentThemeMode);
     }
-    fetchData();
-  });
-
-  const checkAuthentication = async () => {
-    const user = auth.currentUser;
-
-    if (!user) {
-      return false;
-    }
-
-    try {
-      const tokenResult = await user.getIdTokenResult();
-      // console.log("tokenResult", tokenResult.token);
-
-      const storedUser = JSON.parse(localStorage.getItem("user"));
-
-      if (storedUser && storedUser.access_token === tokenResult.token) {
-        return true;
-      } else {
-        return false;
-      }
-    } catch (error) {
-      alert("Error checking authentication:", error);
-      return false;
-    }
-  };
+  }, [setCurrentColor, setCurrentMode]);
 
   return (
     <div className={currentMode === "Dark" ? "dark" : ""}>
@@ -166,6 +158,8 @@ const App = () => {
             </div>
             <Routes>
               <Route path="/login" element={<LoginPage />} />
+              <Route path="/" element={<LoginPage />} />
+              <Route path="*" element={<LoginPage />} />
             </Routes>
           </div>
         )}
