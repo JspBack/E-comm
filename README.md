@@ -26,7 +26,9 @@ npm start
 
 ## Demo
 
-[Demo](https://e-comm-bd7df.web.app)
+->Login & register working.(little janky but its working.)
+
+[Live Demo](https://e-comm-bd7df.web.app)
 
 ## Contributing
 

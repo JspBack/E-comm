@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { MdOutlineCancel } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 import { useStateContext } from "../../../contexts/ContextProvider";
 import {
   signInWithEmailAndPassword,
@@ -9,6 +10,7 @@ import { auth } from "../../../firebase";
 import Loader from "./Loader";
 
 const Process = ({ PswdType, text, isReg }) => {
+  const navigate = useNavigate();
   const { handleClose } = useStateContext();
   const currentColor = localStorage.getItem("colorMode");
   const [email, setEmail] = useState("");
@@ -21,28 +23,55 @@ const Process = ({ PswdType, text, isReg }) => {
     setLoader(true);
     e.preventDefault();
     setAlerted(false);
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-        const user = userCredential.user;
+        // const user = userCredential.user;
+        return auth.currentUser.getIdToken(); // Call getIdToken() function
+      })
+      .then((accessToken) => {
+        if (localStorage.getItem("user") !== null) {
+          const storedUser = JSON.parse(localStorage.getItem("user"));
+
+          if (storedUser.access_token !== null) {
+            alert("You are already logged in!");
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                access_token: accessToken,
+              })
+            );
+            navigate("/ecommerce");
+            setEmail("");
+            setPassword("");
+            setConfPassword("");
+            handleClose("login");
+            // window.location.reload();
+            return;
+          }
+        }
+
+        alert("Successfully logged in!");
         localStorage.setItem(
           "user",
           JSON.stringify({
-            name: user.displayName,
-            access_token: user.accessToken,
+            access_token: accessToken,
           })
         );
-        alert("Successfully logged in!");
+
         setEmail("");
         setPassword("");
         setConfPassword("");
+        handleClose("login");
         window.location.reload();
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         alert(`${errorMessage} (${errorCode})`);
+      })
+      .finally(() => {
         setLoader(false);
-        return;
       });
   };
 
@@ -57,20 +86,14 @@ const Process = ({ PswdType, text, isReg }) => {
     } else {
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          const user = userCredential.user;
-          alert("Account created successfully");
-          localStorage.setItem(
-            "user",
-            JSON.stringify({
-              name: user.displayName,
-              access_token: user.accessToken,
-            })
-          );
+          // const user = userCredential.user;
           setEmail("");
           setPassword("");
           setConfPassword("");
           setAlerted(false);
-          window.location.reload();
+          alert("Account created successfully, please log in.");
+          handleClose("register");
+          setLoader(false);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -82,7 +105,7 @@ const Process = ({ PswdType, text, isReg }) => {
     }
   };
   return (
-    <div className="z-10 md:right-[52%] md:top-[33%] flex flex-col justify-center items-center absolute bg-gray-300 p-3 lg:top-[35%] lg:right-[30%] right-[35%] sm:right-[43%] top-[40%] sm:top-[35%] rounded-md ">
+    <div className="z-10 md:right-[47%] md:top-[33%] flex flex-col justify-center items-center absolute bg-gray-300 p-3 lg:top-[35%] lg:right-[30%] right-[35%] sm:right-[43%] top-[40%] sm:top-[35%] rounded-md ">
       <div className="flex flex-row items-start">
         {isReg ? (
           <form
@@ -123,7 +146,7 @@ const Process = ({ PswdType, text, isReg }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minlength="8"
+              minLength="8"
               autoComplete={PswdType}
             />
             <input
@@ -139,7 +162,7 @@ const Process = ({ PswdType, text, isReg }) => {
               value={confPassword}
               onChange={(e) => setConfPassword(e.target.value)}
               required
-              minlength="8"
+              minLength="8"
             />
 
             <button
@@ -195,7 +218,7 @@ const Process = ({ PswdType, text, isReg }) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minlength="8"
+              minLength="8"
               autoComplete={PswdType}
             />
 

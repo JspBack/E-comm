@@ -26,6 +26,7 @@ import {
 import "./App.css";
 
 import { useStateContext } from "./contexts/ContextProvider";
+import { auth } from "./firebase";
 
 const App = () => {
   const {
@@ -44,14 +45,45 @@ const App = () => {
   useEffect(() => {
     const currentThemeColor = localStorage.getItem("colorMode");
     const currentThemeMode = localStorage.getItem("themeMode");
+    const fetchData = async () => {
+      const isAuthenticated = await checkAuthentication();
+
+      if (isAuthenticated === true) {
+        setUser(true);
+      } else {
+        setUser(false);
+      }
+    };
     if (currentThemeColor && currentThemeMode) {
       setCurrentColor(currentThemeColor);
       setCurrentMode(currentThemeMode);
     }
-  }, []);
-  if (localStorage.getItem("user") !== null) {
-    setUser(true);
-  }
+    fetchData();
+  });
+
+  const checkAuthentication = async () => {
+    const user = auth.currentUser;
+
+    if (!user) {
+      return false;
+    }
+
+    try {
+      const tokenResult = await user.getIdTokenResult();
+      // console.log("tokenResult", tokenResult.token);
+
+      const storedUser = JSON.parse(localStorage.getItem("user"));
+
+      if (storedUser && storedUser.access_token === tokenResult.token) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      alert("Error checking authentication:", error);
+      return false;
+    }
+  };
 
   return (
     <div className={currentMode === "Dark" ? "dark" : ""}>
