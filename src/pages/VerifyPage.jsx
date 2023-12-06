@@ -51,7 +51,7 @@ const VerifyPage = () => {
       await auth.currentUser.reload();
       if (auth.currentUser.emailVerified) {
         alert("Email verified!");
-        window.location.href = "/login";
+        window.location.href = "/";
       } else {
         alert("Email not verified!");
       }
