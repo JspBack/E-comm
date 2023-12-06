@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Loader from "../components/Login/components/Loader";
 import { MdOutlineCancel } from "react-icons/md";
+import { auth } from "../firebase";
+import { sendEmailVerification } from "firebase/auth";
+import { useStateContext } from "../contexts/ContextProvider";
 
 const VerifyPage = () => {
+  const { setVerify } = useStateContext();
   const currentColor = localStorage.getItem("colorMode");
   const [loader, setLoader] = useState(false);
   const [codeLoader, setCodeLoader] = useState(false);
@@ -22,22 +26,43 @@ const VerifyPage = () => {
     }
   }, [isButtonDisabled, countdown]);
 
-  const handleCode = (e) => {
+  const handleCode = async (e) => {
     e.preventDefault();
-    setCodeLoader(true);
+    sendEmailVerification(auth.currentUser)
+      .then(() => {
+        alert("Email Verification Sent!");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
     setTimeout(() => {
       setCodeLoader(false);
       setIsButtonDisabled(true);
     }, 2000);
+    setCodeLoader(true);
   };
 
   const closeReg = () => {
-    window.location.href = "/";
+    window.location.href = "/login";
   };
 
-  const handlVerify = (e) => {
+  const handlVerify = async (e) => {
     e.preventDefault();
     setLoader(true);
+    try {
+      await auth.currentUser.reload();
+      if (auth.currentUser.emailVerified) {
+        alert("Email verified!");
+        window.location.href = "/login";
+        setVerify(true);
+      } else {
+        alert("Email not verified!");
+      }
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setLoader(false);
+    }
   };
 
   return (
@@ -66,8 +91,9 @@ const VerifyPage = () => {
               onSubmit={handlVerify}
             >
               <input
+                disabled
                 className="tracking-tighter mb-3 rounded text-black sm:w-96 w-48 text-lg p-3 hover:drop-shadow-xl"
-                placeholder="Verification Code"
+                placeholder="Disabled rn :("
               />
               <button
                 style={{

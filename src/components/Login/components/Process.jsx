@@ -76,7 +76,7 @@ const Process = ({ PswdType, text, isReg }) => {
             setEmail("");
             setPassword("");
             setConfPassword("");
-            setUser(false);
+            setUser(true);
             handleClose("login");
             navigate("/verify");
             window.location.reload();
@@ -126,7 +126,7 @@ const Process = ({ PswdType, text, isReg }) => {
           setConfPassword("");
           setAlerted(false);
           setUser(true);
-          setVerify(false);
+          // setVerify(false);
           alert("Account created successfully, please verify your accont.");
           handleClose("register");
           setLoader(false);
