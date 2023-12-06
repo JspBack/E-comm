@@ -26,7 +26,7 @@ npm start
 
 ## Demo
 
-->Login & register working.(little janky but its working.)
+&rarr; Login & register working.(little janky but its working.)
 
 [Live Demo](https://e-comm-bd7df.web.app)
 
@@ -38,3 +38,7 @@ to discuss what you would like to change.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+## Issues
+
+&bull; If you're trying to register and login , you need to login 2 times.(Idk why but it's working. )
