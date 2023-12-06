@@ -3,10 +3,8 @@ import Loader from "../components/Login/components/Loader";
 import { MdOutlineCancel } from "react-icons/md";
 import { auth } from "../firebase";
 import { sendEmailVerification } from "firebase/auth";
-import { useStateContext } from "../contexts/ContextProvider";
 
 const VerifyPage = () => {
-  const { setVerify } = useStateContext();
   const currentColor = localStorage.getItem("colorMode");
   const [loader, setLoader] = useState(false);
   const [codeLoader, setCodeLoader] = useState(false);
@@ -54,7 +52,6 @@ const VerifyPage = () => {
       if (auth.currentUser.emailVerified) {
         alert("Email verified!");
         window.location.href = "/login";
-        setVerify(true);
       } else {
         alert("Email not verified!");
       }
