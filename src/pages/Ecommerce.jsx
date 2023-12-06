@@ -3,7 +3,6 @@ import { BsCurrencyDollar } from "react-icons/bs";
 import { GoDotFill } from "react-icons/go";
 import { IoIosMore } from "react-icons/io";
 import { DropDownListComponent } from "@syncfusion/ej2-react-dropdowns";
-
 import { Stacked, Doughnut, Button, LineChart, SparkLine } from "../components";
 import {
   earningData,

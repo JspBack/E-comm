@@ -19,6 +19,7 @@ export const ContextProvider = ({ children }) => {
   const [activeMenu, setActiveMenu] = useState(true);
   const [isClicked, setIsClicked] = useState(initialState);
   const [user, setUser] = useState();
+  const [verify, setVerify] = useState(false);
 
   const setMode = (mode) => {
     setCurrentMode(mode.target.value);
@@ -59,6 +60,8 @@ export const ContextProvider = ({ children }) => {
         themeSettings,
         setThemeSettings,
         handleClose,
+        verify,
+        setVerify,
       }}
     >
       {children}

@@ -11,7 +11,7 @@ import Loader from "./Loader";
 
 const Process = ({ PswdType, text, isReg }) => {
   const navigate = useNavigate();
-  const { handleClose, setUser } = useStateContext();
+  const { handleClose, setUser, setVerify } = useStateContext();
   const currentColor = localStorage.getItem("colorMode");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,15 +32,15 @@ const Process = ({ PswdType, text, isReg }) => {
       .then((accessToken) => {
         if (localStorage.getItem("user") !== null) {
           const storedUser = JSON.parse(localStorage.getItem("user"));
-
-          if (storedUser.access_token !== null) {
-            alert("You are already logged in!");
+          if (auth.currentUser.emailVerified === true) {
             localStorage.setItem(
               "user",
               JSON.stringify({
                 access_token: accessToken,
               })
             );
+            alert("Successfully logged in!");
+            setVerify(true);
             navigate("/ecommerce");
             setEmail("");
             setPassword("");
@@ -49,22 +49,55 @@ const Process = ({ PswdType, text, isReg }) => {
             handleClose("login");
             return;
           }
+
+          if (auth.currentUser.emailVerified === false) {
+            alert("You should verify your account first!");
+            navigate("/verify");
+            setEmail("");
+            setPassword("");
+            setConfPassword("");
+            setUser(true);
+            handleClose("login");
+            return;
+          } else {
+            alert(
+              "there is an error in your account, please contact the admin"
+            );
+          }
+        } else {
+          if (auth.currentUser.emailVerified === false) {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                access_token: accessToken,
+              })
+            );
+            alert("You should verify your account first!");
+            setEmail("");
+            setPassword("");
+            setConfPassword("");
+            setUser(false);
+            handleClose("login");
+            navigate("/verify");
+            window.location.reload();
+          }
+          if (auth.currentUser.emailVerified === true) {
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                access_token: accessToken,
+              })
+            );
+            alert("Successfully logged in!");
+            setVerify(true);
+            setEmail("");
+            setPassword("");
+            setConfPassword("");
+            setUser(true);
+            handleClose("login");
+            window.location.reload();
+          }
         }
-
-        alert("Successfully logged in!");
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            access_token: accessToken,
-          })
-        );
-
-        setEmail("");
-        setPassword("");
-        setConfPassword("");
-        setUser(true);
-        handleClose("login");
-        window.location.reload();
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -92,14 +125,14 @@ const Process = ({ PswdType, text, isReg }) => {
           setPassword("");
           setConfPassword("");
           setAlerted(false);
-          alert("Account created successfully, please log in.");
+          setUser(true);
+          setVerify(false);
+          alert("Account created successfully, please verify your accont.");
           handleClose("register");
           setLoader(false);
         })
         .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          alert(`${errorMessage} (${errorCode})`);
+          alert(error);
           setLoader(false);
           return;
         });

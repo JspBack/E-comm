@@ -3,7 +3,7 @@ const Loader = () => {
   return (
     <div>
       <img
-        className=" w-8 h-8 sm:w-14 sm:h-14"
+        className=" w-8 h-8 sm:w-10 sm:h-10"
         alt="loader"
         src="/loader.gif"
       />
