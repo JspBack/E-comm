@@ -41,4 +41,4 @@ to discuss what you would like to change.
 
 ## Issues
 
-&bull; If you're trying to register and login , you need to login 2 times.(Idk why but it's working. )
+&bull; If you're trying to register and login , you need to login 2 times.(Idk why but it's working. )(Fixed!!)
